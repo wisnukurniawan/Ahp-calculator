@@ -171,14 +171,14 @@ public class AlternatifBobotActivity extends AppCompatActivity {
     }
 
     private KeputusanViewModel getHasilPembobotan() {
-        for (String option : keputusanViewModel.alternatifToBobotMap.keySet()) {
-            float grade = 0;
-            for (String criterion : keputusanViewModel.kriteriaToBobotMap.keySet()) {
-                float weight = keputusanViewModel.kriteriaToBobotMap.get(criterion);
-                float rating = this.matrix.getValue(option, criterion) * 20; // 5 bintang = 100%
-                grade += rating * weight;
+        for (String alternatif : keputusanViewModel.alternatifToBobotMap.keySet()) {
+            float bobot = 0;
+            for (String kriteria : keputusanViewModel.kriteriaToBobotMap.keySet()) {
+                float weight = keputusanViewModel.kriteriaToBobotMap.get(kriteria);
+                float rating = this.matrix.getValue(alternatif, kriteria) * 20; // 5 bintang = 100%
+                bobot += rating * weight;
             }
-            keputusanViewModel.alternatifToBobotMap.put(option, grade);
+            keputusanViewModel.alternatifToBobotMap.put(alternatif, bobot);
         }
         return keputusanViewModel;
     }

@@ -3,6 +3,7 @@ package com.spk.ahp_lokasipabrikbambu.bobot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,6 @@ import com.spk.ahp_lokasipabrikbambu.utils.StringUtils;
 import com.spk.ahp_lokasipabrikbambu.utils.ViewUtils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,13 +36,17 @@ public class KriteriaBobotActivity extends AppCompatActivity {
     private LinearLayout kriteriaBobotContainer;
 
     private static final String[] spinnerLabelsTemplate = {
-            " sama penting dengan ",
-            " cukup penting dengan ",
-            " lebih penting dengan ",
-            " sangat lebih penting dengan ",
-            " mutlak lebih penting dengan "};
-    private static final float[] spinnerValues = {1f, 3f, 5f, 7f, 9f};
-    private static final int DEFAULT_SPINNER_VALUE_POSITION = 0;
+            " mutlak tidak lebih penting dengan(0.11) ",
+            " sangat tidak lebih penting dengan(0.14) ",
+            " lebih tidak penting dengan(0.2) ",
+            " cukup tidak penting dengan(0.33) ",
+            " sama penting dengan(1) ",
+            " cukup penting dengan(3) ",
+            " lebih penting dengan(5) ",
+            " sangat lebih penting dengan(7) ",
+            " mutlak lebih penting dengan(9) "};
+    private static final float[] spinnerValues = {1f / 9f, 1f / 7f, 1f / 5f, 1f / 3f, 1f, 3f, 5f, 7f, 9f};
+    private static final int DEFAULT_SPINNER_VALUE_POSITION = 4;
     private static final float DEFAULT_SPINNER_VALUE = spinnerValues[DEFAULT_SPINNER_VALUE_POSITION];
 
     private Matrix matrix;
@@ -75,6 +79,9 @@ public class KriteriaBobotActivity extends AppCompatActivity {
         kriteriaBobotContainer = findViewById(R.id.kriteria_bobot_container);
         for (String comparison : comparisons) {
             Spinner spinner = createSpinner(comparison);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 0, 0, 40);
+            spinner.setLayoutParams(layoutParams);
             layout.addView(spinner);
         }
         ScrollView scroller = new ScrollView(this);
@@ -108,6 +115,8 @@ public class KriteriaBobotActivity extends AppCompatActivity {
 
                 KriteriaBobotActivity.this.matrix.setValue(barisKriteria, kolomKriteria, normalValue);
                 KriteriaBobotActivity.this.matrix.setValue(kolomKriteria, barisKriteria, invertedValue);
+
+                Log.d("matriks", "matriks: " + KriteriaBobotActivity.this.matrix.toString());
             }
 
             @Override
@@ -127,14 +136,14 @@ public class KriteriaBobotActivity extends AppCompatActivity {
         return values;
     }
 
-    // Buat default matrix
+    // Buat default matrix 1 semua by default
     private List<String> generateKriteriaPairs(Set<String> kriteriaSet) {
         this.matrix = new Matrix(kriteriaSet, kriteriaSet);
         List<String> comparisons = new ArrayList<>();
         Object[] kriteria = kriteriaSet.toArray();
         for (int i = 0; i < kriteria.length; i++) {
             String barisKriteria = (String) kriteria[i];
-            this.matrix.setValue(barisKriteria, barisKriteria, 0);
+            this.matrix.setValue(barisKriteria, barisKriteria, DEFAULT_SPINNER_VALUE);
 
             for (int j = i + 1; j < kriteria.length; j++) {
                 String kolomKriteria = (String) kriteria[j];
@@ -179,18 +188,30 @@ public class KriteriaBobotActivity extends AppCompatActivity {
     }
 
     private KeputusanViewModel getHasilPembobotan() {
-        Map<String, Float> totalBaris = this.matrix.getTotalBaris();
-        Iterator<String> it = totalBaris.keySet().iterator();
-        float total = totalBaris.get(Matrix.GRAND_TOTAL_KEY);
-        while (it.hasNext()) {
-            String kriteria = it.next();
-            Float bobotBaris = totalBaris.get(kriteria);
-            Float persentaseBobot = bobotBaris / total;
-            if (!kriteria.equals(Matrix.GRAND_TOTAL_KEY)) {
-                keputusanViewModel.kriteriaToBobotMap.put(kriteria, persentaseBobot);
-            }
+        Map<String, Float> totalKolom = this.matrix.getTotalKolom();
+        this.matrix.divideMatrixBySumOfColumn(totalKolom);
+        Map<String, Float> bobot = this.matrix.getSumMatrix();
+
+        for (String kriteria : bobot.keySet()) {
+            Float bobotBaris = bobot.get(kriteria);
+            keputusanViewModel.kriteriaToBobotMap.put(kriteria, bobotBaris);
         }
         return keputusanViewModel;
     }
+
+//    private KeputusanViewModel getHasilPembobotan2() {
+//        Map<String, Float> totalBaris = this.matrix.getTotalBaris();
+//        Iterator<String> it = totalBaris.keySet().iterator();
+//        float total = totalBaris.get(Matrix.GRAND_TOTAL_KEY);
+//        while (it.hasNext()) {
+//            String kriteria = it.next();
+//            Float bobotBaris = totalBaris.get(kriteria);
+//            Float persentaseBobot = bobotBaris / total;
+//            if (!kriteria.equals(Matrix.GRAND_TOTAL_KEY)) {
+//                keputusanViewModel.kriteriaToBobotMap.put(kriteria, persentaseBobot);
+//            }
+//        }
+//        return keputusanViewModel;
+//    }
 
 }

@@ -12,6 +12,7 @@ import java.util.Set;
  */
 public class Matrix {
     public static final String GRAND_TOTAL_KEY = "grandTotal";
+    public static double RI[] = {0.0, 0.0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49};
 
     private String[] rowLabels = new String[1];
     private String[] colLabels = new String[1];
@@ -50,6 +51,41 @@ public class Matrix {
             grandTotal += total;
         }
         totals.put(GRAND_TOTAL_KEY, grandTotal);
+
+        return totals;
+    }
+
+    public Map<String, Float> getTotalKolom() {
+        Map<String, Float> totals = new HashMap<>();
+        for (int i = 0; i < this.rowLabels.length; i++) {
+            float total = 0;
+            for (int j = 0; j < this.colLabels.length; j++) {
+                total += this.rows[j][i];
+            }
+            totals.put(this.rowLabels[i], total);
+        }
+
+        return totals;
+    }
+
+    public void divideMatrixBySumOfColumn(Map<String, Float> totalKolom) {
+        for (String rowLabel : this.rowLabels) {
+            for (int j = 0; j < this.colLabels.length; j++) {
+                Float divider = totalKolom.get(rowLabel);
+                setValue(this.rowLabels[j], rowLabel, getValue(this.rowLabels[j], rowLabel) / divider);
+            }
+        }
+    }
+
+    public Map<String, Float> getSumMatrix() {
+        Map<String, Float> totals = new HashMap<>();
+        for (int i = 0; i < this.rowLabels.length; i++) {
+            float total = 0;
+            for (int j = 0; j < this.colLabels.length; j++) {
+                total += this.rows[i][j] / this.colLabels.length;
+            }
+            totals.put(this.rowLabels[i], total);
+        }
 
         return totals;
     }
