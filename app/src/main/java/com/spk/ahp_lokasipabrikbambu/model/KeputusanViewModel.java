@@ -10,7 +10,7 @@ import java.util.Map;
 public class KeputusanViewModel implements Serializable {
     public static final String DATA_KEPUTUSAN_KEY = "data-keputusan-key";
 
-    public Map<String, Float> kriteriaKeBeratMap;
-    public Map<String, Float> alternatifKeGradeMap;
+    public Map<String, Float> kriteriaToBobotMap;
+    public Map<String, Float> alternatifToBobotMap;
 
 }

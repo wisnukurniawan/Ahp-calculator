@@ -9,10 +9,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.spk.ahp_lokasipabrikbambu.model.KeputusanViewModel;
-import com.spk.ahp_lokasipabrikbambu.view.MyItemView;
 import com.spk.ahp_lokasipabrikbambu.R;
+import com.spk.ahp_lokasipabrikbambu.model.KeputusanViewModel;
 import com.spk.ahp_lokasipabrikbambu.utils.ViewUtils;
+import com.spk.ahp_lokasipabrikbambu.view.MyItemView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +35,8 @@ public class KriteriaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_kriteria);
 
         bindView();
+
+        initToolbar();
         initFirstKriteriaItem();
         initAddKriteria();
     }
@@ -42,6 +44,12 @@ public class KriteriaActivity extends AppCompatActivity {
     private void bindView() {
         kriteriaContainer = findViewById(R.id.kriteria_container);
         addKriteriaBtn = findViewById(R.id.tambah_kriteria_btn);
+    }
+
+    private void initToolbar() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void initFirstKriteriaItem() {
@@ -86,6 +94,12 @@ public class KriteriaActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_done, menu);
         MenuItem menuItem = menu.findItem(R.id.action_selesai);
@@ -94,7 +108,6 @@ public class KriteriaActivity extends AppCompatActivity {
         }
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -124,7 +137,8 @@ public class KriteriaActivity extends AppCompatActivity {
                 kriteriaMap.put(((MyItemView) child).getValue(), 0f);
             }
         }
-        keputusanViewModel.kriteriaKeBeratMap = kriteriaMap;
+
+        keputusanViewModel.kriteriaToBobotMap = kriteriaMap;
         return keputusanViewModel;
     }
 

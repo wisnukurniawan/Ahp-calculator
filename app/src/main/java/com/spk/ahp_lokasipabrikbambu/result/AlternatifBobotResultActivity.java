@@ -61,7 +61,7 @@ public class AlternatifBobotResultActivity extends AppCompatActivity {
         TableLayout table = new TableLayout(this);
         table.setPadding(2, 2, 2, 10);
 
-        Iterator<String> it = keputusanViewModel.alternatifKeGradeMap.keySet().iterator();
+        Iterator<String> it = keputusanViewModel.alternatifToBobotMap.keySet().iterator();
         List<TableRow> descendingOptions = new ArrayList<TableRow>();
 
         while (it.hasNext()) {
@@ -69,7 +69,7 @@ public class AlternatifBobotResultActivity extends AppCompatActivity {
             row.setOrientation(LinearLayout.HORIZONTAL);
 
             String alternatif = it.next();
-            Float grade = keputusanViewModel.alternatifKeGradeMap.get(alternatif);
+            Float grade = keputusanViewModel.alternatifToBobotMap.get(alternatif);
             String percent = String.valueOf(Math.round(grade));
 
             TextView optionLabel = new TextView(this);

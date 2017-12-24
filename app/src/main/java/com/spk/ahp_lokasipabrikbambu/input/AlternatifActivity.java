@@ -9,11 +9,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.spk.ahp_lokasipabrikbambu.model.KeputusanViewModel;
-import com.spk.ahp_lokasipabrikbambu.bobot.KriteriaBobotActivity;
-import com.spk.ahp_lokasipabrikbambu.view.MyItemView;
 import com.spk.ahp_lokasipabrikbambu.R;
+import com.spk.ahp_lokasipabrikbambu.bobot.KriteriaBobotActivity;
+import com.spk.ahp_lokasipabrikbambu.model.KeputusanViewModel;
 import com.spk.ahp_lokasipabrikbambu.utils.ViewUtils;
+import com.spk.ahp_lokasipabrikbambu.view.MyItemView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,7 +144,7 @@ public class AlternatifActivity extends AppCompatActivity {
                 alternatifMap.put(((MyItemView) child).getValue(), 0f);
             }
         }
-        keputusanViewModel.alternatifKeGradeMap = alternatifMap;
+        keputusanViewModel.alternatifToBobotMap = alternatifMap;
         return keputusanViewModel;
     }
 

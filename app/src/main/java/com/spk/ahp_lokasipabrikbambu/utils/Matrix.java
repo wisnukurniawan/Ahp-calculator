@@ -55,7 +55,6 @@ public class Matrix {
     }
 
     private int[] getBarisDanKolomIndex(String rowLabel, String columnLabel) {
-
         int rowIndex = Arrays.binarySearch(this.rowLabels, rowLabel);
         int colIndex = Arrays.binarySearch(this.colLabels, columnLabel);
 

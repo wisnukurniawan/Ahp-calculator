@@ -3,7 +3,6 @@ package com.spk.ahp_lokasipabrikbambu.bobot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -69,7 +68,7 @@ public class KriteriaBobotActivity extends AppCompatActivity {
     }
 
     private void bindView() {
-        List<String> comparisons = generateKriteriaPairs(keputusanViewModel.kriteriaKeBeratMap.keySet());
+        List<String> comparisons = generateKriteriaPairs(keputusanViewModel.kriteriaToBobotMap.keySet());
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -84,7 +83,6 @@ public class KriteriaBobotActivity extends AppCompatActivity {
     }
 
     private Spinner createSpinner(String encodedKriteriaPair) {
-
         String[] kriteria = StringUtils.decodeStringPair(encodedKriteriaPair);
 
         ArrayAdapter<CharSequence> adapter =
@@ -121,26 +119,29 @@ public class KriteriaBobotActivity extends AppCompatActivity {
         return spinner;
     }
 
-    private String[] generatePickerDisplayedValues(String leftKriteria, String kananKriteria) {
+    private String[] generatePickerDisplayedValues(String leftKriteria, String rightKriteria) {
         String[] values = new String[spinnerLabelsTemplate.length];
         for (int i = 0; i < spinnerLabelsTemplate.length; i++) {
-            values[i] = leftKriteria + spinnerLabelsTemplate[i] + kananKriteria;
+            values[i] = leftKriteria + spinnerLabelsTemplate[i] + rightKriteria;
         }
         return values;
     }
 
+    // Buat default matrix
     private List<String> generateKriteriaPairs(Set<String> kriteriaSet) {
         this.matrix = new Matrix(kriteriaSet, kriteriaSet);
         List<String> comparisons = new ArrayList<>();
         Object[] kriteria = kriteriaSet.toArray();
         for (int i = 0; i < kriteria.length; i++) {
             String barisKriteria = (String) kriteria[i];
-            this.matrix.setValue(barisKriteria, barisKriteria, DEFAULT_SPINNER_VALUE_POSITION);
+            this.matrix.setValue(barisKriteria, barisKriteria, 0);
+
             for (int j = i + 1; j < kriteria.length; j++) {
                 String kolomKriteria = (String) kriteria[j];
-                String normalEncoding = StringUtils.encodeStringPair(barisKriteria, kolomKriteria);
                 this.matrix.setValue(barisKriteria, kolomKriteria, DEFAULT_SPINNER_VALUE);
                 this.matrix.setValue(kolomKriteria, barisKriteria, DEFAULT_SPINNER_VALUE);
+
+                String normalEncoding = StringUtils.encodeStringPair(barisKriteria, kolomKriteria);
                 comparisons.add(normalEncoding);
             }
         }
@@ -186,11 +187,7 @@ public class KriteriaBobotActivity extends AppCompatActivity {
             Float bobotBaris = totalBaris.get(kriteria);
             Float persentaseBobot = bobotBaris / total;
             if (!kriteria.equals(Matrix.GRAND_TOTAL_KEY)) {
-
-                Log.d("getHasilPembobotan","kriteria : " + kriteria);
-                Log.d("getHasilPembobotan","persentase : " + persentaseBobot);
-
-                keputusanViewModel.kriteriaKeBeratMap.put(kriteria, persentaseBobot);
+                keputusanViewModel.kriteriaToBobotMap.put(kriteria, persentaseBobot);
             }
         }
         return keputusanViewModel;

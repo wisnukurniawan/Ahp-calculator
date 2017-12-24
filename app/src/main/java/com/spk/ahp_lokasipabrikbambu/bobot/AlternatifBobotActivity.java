@@ -51,15 +51,15 @@ public class AlternatifBobotActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void bindView() {
-        this.matrix = new Matrix(keputusanViewModel.alternatifKeGradeMap.keySet(),
-                keputusanViewModel.kriteriaKeBeratMap.keySet());
+        this.matrix = new Matrix(keputusanViewModel.alternatifToBobotMap.keySet(),
+                keputusanViewModel.kriteriaToBobotMap.keySet());
 
         alternatifBobotContainer = findViewById(R.id.alternatif_bobot_container);
         LinearLayout layoutContainer = new LinearLayout(this);
         layoutContainer.setOrientation(LinearLayout.VERTICAL);
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        for (String option : keputusanViewModel.alternatifKeGradeMap.keySet()) {
+        for (String option : keputusanViewModel.alternatifToBobotMap.keySet()) {
             TextView label = new TextView(this);
             label.setText("Alternatif :" + option);
             label.setGravity(Gravity.START);
@@ -68,7 +68,7 @@ public class AlternatifBobotActivity extends AppCompatActivity {
             label.setPadding(8, 16, 8, 8);
             layout.addView(label);
 
-            List<LinearLayout> bars = generateRatingBars(option, keputusanViewModel.kriteriaKeBeratMap.keySet());
+            List<LinearLayout> bars = generateRatingBars(option, keputusanViewModel.kriteriaToBobotMap.keySet());
             for (LinearLayout bar : bars) {
                 layout.addView(bar);
             }
@@ -171,14 +171,14 @@ public class AlternatifBobotActivity extends AppCompatActivity {
     }
 
     private KeputusanViewModel getHasilPembobotan() {
-        for (String option : keputusanViewModel.alternatifKeGradeMap.keySet()) {
+        for (String option : keputusanViewModel.alternatifToBobotMap.keySet()) {
             float grade = 0;
-            for (String criterion : keputusanViewModel.kriteriaKeBeratMap.keySet()) {
-                float weight = keputusanViewModel.kriteriaKeBeratMap.get(criterion);
+            for (String criterion : keputusanViewModel.kriteriaToBobotMap.keySet()) {
+                float weight = keputusanViewModel.kriteriaToBobotMap.get(criterion);
                 float rating = this.matrix.getValue(option, criterion) * 20; // 5 bintang = 100%
                 grade += rating * weight;
             }
-            keputusanViewModel.alternatifKeGradeMap.put(option, grade);
+            keputusanViewModel.alternatifToBobotMap.put(option, grade);
         }
         return keputusanViewModel;
     }

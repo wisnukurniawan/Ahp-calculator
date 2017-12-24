@@ -53,12 +53,12 @@ public class KriteriaBobotResultActivity extends AppCompatActivity {
 
         TableLayout tabel = new TableLayout(this);
         tabel.setPadding(2, 2, 2, 10);
-        for (String kriteria : keputusanViewModel.kriteriaKeBeratMap.keySet()) {
+        for (String kriteria : keputusanViewModel.kriteriaToBobotMap.keySet()) {
 
             TableRow baris = new TableRow(this);
             baris.setOrientation(LinearLayout.HORIZONTAL);
 
-            Float weight = keputusanViewModel.kriteriaKeBeratMap.get(kriteria);
+            Float weight = keputusanViewModel.kriteriaToBobotMap.get(kriteria);
             String persen = String.valueOf(Math.round(weight * 100));
 
             TextView kriteriaLabel = new TextView(this);
